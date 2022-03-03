@@ -1,0 +1,22 @@
+#!/bin/bash -l
+
+
+#$ -P icamp
+#$ -j y 
+#$ -N star
+#$ -m n 
+#$ -pe omp 16
+
+
+module load star/2.7.9a
+
+for i in ./*.fq; do
+    STAR --genomeDir /restricted/projectnb/icamp/gtex/files3/mito/star_mtDNAref_index  \
+        --runThreadN 16  \
+        --readFilesIn $i  \
+        --outFileNamePrefix /restricted/projectnb/icamp/gtex/files3/mito/star_results/${i%.fq}  \
+        --outSAMtype BAM Unsorted  \
+        --outSAMmapqUnique 60 \
+        --outSAMunmapped Within  \
+        --outSAMattributes Standard
+done

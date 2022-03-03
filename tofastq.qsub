@@ -1,0 +1,11 @@
+#!/bin/bash -l
+
+
+#$ -P icamp
+#$ -j y 
+#$ -N bam2fq
+#$ -m n
+
+module load samtools
+
+for i in ./*.bam; do samtools bam2fq $i > ${i%.bam}.fq; done

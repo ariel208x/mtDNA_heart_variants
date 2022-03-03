@@ -1,0 +1,13 @@
+#!/bin/bash -l
+
+#$ -P icamp
+#$ -j y 
+#$ -N bwa_files
+#$ -m n 
+
+
+module load bwa
+
+for i in ./*.fq; do
+    bwa mem bwaref $i -K 100000000 -p -v 3 -Y > ${i%.fq}.sam
+done

@@ -1,0 +1,19 @@
+#!/bin/bash -l
+
+
+#$ -P icamp
+#$ -j y 
+#$ -N GATK
+#$ -m n
+#$ -l h_rt=24:00:00
+
+module load miniconda/4.9.2
+module load gatk/4.2.1.0
+module load samtools
+
+for i in ./*Aligned.out.bam; do
+    gatk AddOrReplaceReadGroups -I $i -O ${i%Aligned.out.bam}-addedReadGroup.bam -LB Pond -PL ILLUMINA -PU 0 -SM ${i%Aligned.out.bam}
+    samtools sort ${i%Aligned.out.bam}-addedReadGroup.bam -o ${i%Aligned.out.bam}-addedReadGroup-sorted.bam
+    samtools index -b ${i%Aligned.out.bam}-addedReadGroup-sorted.bam
+    gatk Mutect2 -R /restricted/projectnb/icamp/gtex/files3/mito/chrMref.fa -L chrM --mitochondria-mode -I ${i%Aligned.out.bam}-addedReadGroup-sorted.bam -O ${i%Aligned.out.bam}.vcf
+done

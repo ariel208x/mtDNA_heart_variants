@@ -1,0 +1,13 @@
+#!/bin/bash -l
+
+
+#$ -P icamp
+#$ -j y 
+#$ -N extract_files
+#$ -m be
+
+module load samtools
+
+for i in ./*.bam; do samtools view -b $i chrM > ./mito/${i%.Aligned*}.bam; done
+
+for i in ./*.cram; do samtools view -b $i chrM > ./mito/${i%.cram*}.bam; done
